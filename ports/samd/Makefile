@@ -1,4 +1,4 @@
-BOARD ?= ADAFRUIT_ITSYBITSY_M4_EXPRESS
+BOARD ?= GLOWEY
 BOARD_DIR ?= boards/$(BOARD)
 BUILD ?= build-$(BOARD)
 
@@ -47,8 +47,6 @@ endif
 
 SRC_C = \
 	main.c \
-	modutime.c \
-	modmachine.c \
 	mphalport.c \
 	samd_isr.c \
 	samd_soc.c \
@@ -68,6 +66,13 @@ SRC_C = \
 	lib/utils/pyexec.c \
 	lib/utils/stdout_helpers.c \
 
+MOD_SRC_C += $(addprefix modules/,\
+    machine/modmachine.c \
+	utime/modutime.c \
+    )
+
+SRC_C += $(MOD_SRC_C)
+
 ifeq ($(MCU_SERIES),SAMD21)
 SRC_C += lib/tinyusb/src/portable/microchip/samd21/dcd_samd21.c
 SRC_S = lib/utils/gchelper_m0.s
@@ -77,7 +82,7 @@ SRC_S = lib/utils/gchelper_m3.s
 endif
 
 # List of sources for qstr extraction
-SRC_QSTR += modutime.c modmachine.c
+SRC_QSTR += $(MOD_SRC_C)
 
 OBJ += $(PY_O)
 OBJ += $(addprefix $(BUILD)/, $(SRC_C:.c=.o))
