@@ -31,16 +31,16 @@ static void uart0_init(void) {
     #if defined(MCU_SAMD21)
 
     // SERCOM0, TX=PA06=PAD2, RX=PA07=PAD3, ALT-D
-    PORT->Group[0].PMUX[3].reg = 0x33;
-    PORT->Group[0].PINCFG[6].reg = 1;
-    PORT->Group[0].PINCFG[7].reg = 1;
+	PORT->Group[0].PMUX[2].reg = 0x33; // 3=0x33 - GLOWEY
+    PORT->Group[0].PINCFG[4].reg = 1; // 6 - GLOWEY
+    PORT->Group[0].PINCFG[5].reg = 1; // 7 - GLOWEY
 
     PM->APBCMASK.bit.SERCOM0_ = 1;
     GCLK->CLKCTRL.reg = GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN_GCLK0 | GCLK_CLKCTRL_ID_SERCOM0_CORE;
     while (GCLK->STATUS.bit.SYNCBUSY) { }
 
-    uint32_t rxpo = 3;
-    uint32_t txpo = 1;
+    uint32_t rxpo = 1; // 3 - GLOWEY
+    uint32_t txpo = 0; // 1 - GLOWEY
 
     #elif defined(MCU_SAMD51)
 
@@ -134,8 +134,19 @@ void samd_init(void) {
     while (GCLK->STATUS.bit.SYNCBUSY) { }
 
     // Configure PA10 as output for LED
-    PORT->Group[0].DIRSET.reg = 1 << 10;
+    PORT->Group[0].DIRSET.reg = 1 << 6; // 10, GLOWEY
 
+    //--------------------------------------------------
+    // configure clock-out for debugging
+    //GCLK->GENDIV.reg  = GCLK_GENDIV_ID(2)  | GCLK_GENDIV_DIV(1);
+    //GCLK->GENCTRL.reg = GCLK_GENCTRL_ID(2) | GCLK_GENCTRL_GENEN | GCLK_GENCTRL_OE | GCLK_GENCTRL_SRC_DFLL48M;
+	//
+    //PORT->Group[0].DIRSET.reg = 1<<16;
+	//PORT->Group[0].PMUX[8].reg = 0x07;
+    //PORT->Group[0].PINCFG[16].reg = 1;
+    //
+    //--------------------------------------------------
+    
     #elif defined(MCU_SAMD51)
 
     GCLK->GENCTRL[1].reg = 1 << GCLK_GENCTRL_DIV_Pos | GCLK_GENCTRL_GENEN | GCLK_GENCTRL_SRC_DFLL;

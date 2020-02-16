@@ -67,6 +67,10 @@
 #define MICROPY_PY_COLLECTIONS              (0)
 #define MICROPY_PY_SYS_MAXSIZE              (1)
 
+#define MICROPY_PY_BUILTINS_HELP            (1)
+#define MICROPY_PY_BUILTINS_HELP_MODULES    (1)
+
+
 // Extended modules
 #define MICROPY_PY_UTIME_MP_HAL             (1)
 #define MICROPY_PY_MACHINE                  (1)
